@@ -1,63 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic PWA Top Bar</title>
-  <link rel="manifest" href="/manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Browser Dynamic Top Bar</title>
 
-  <!-- Chrome theme color -->
-  <meta name="theme-color" content="#ffffff">
+<!-- Chrome / Chromium browsers & modern Safari -->
+<meta name="theme-color" content="#ffffff">
 
-  <!-- iOS Safari status bar -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- iOS Safari older versions -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <style>
-    body {
-      font-family: sans-serif;
-      transition: background 0.3s, color 0.3s;
-      text-align: center;
-      padding-top: 50px;
-    }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-  </style>
+<!-- Windows pinned tiles -->
+<meta name="msapplication-TileColor" content="#ffffff">
+
+<style>
+  body {
+    font-family: sans-serif;
+    transition: background 0.3s, color 0.3s;
+    text-align: center;
+    padding-top: 50px;
+  }
+  input[type=color] {
+    margin: 10px;
+    padding: 5px;
+    width: 80px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <h1>Dynamic Top Bar Example</h1>
-  <p>Switch theme to see the top bar color change on Chrome and status bar mode on iOS.</p>
-  <button id="light">Light Theme</button>
-  <button id="dark">Dark Theme</button>
+<h1>Dynamic Top Bar (All Browsers)</h1>
+<p>Pick any color for Chromium/Safari 17+. Older iOS Safari uses light/dark fallback.</p>
+<input type="color" id="colorPicker" value="#ff0000">
 
-  <script>
-    const themeMeta = document.querySelector('meta[name="theme-color"]');
-    const iosMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+<script>
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+const iosMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+const msMeta = document.querySelector('meta[name="msapplication-TileColor"]');
+const colorInput = document.getElementById('colorPicker');
 
-    const setLightTheme = () => {
-      // Page colors
-      document.body.style.background = '#ffffff';
-      document.body.style.color = '#000000';
+function updateTheme(color) {
+  // Update page background and contrast text
+  document.body.style.background = color;
+  const rgb = parseInt(color.slice(1), 16);
+  const r = (rgb >> 16) & 0xff;
+  const g = (rgb >> 8) & 0xff;
+  const b = rgb & 0xff;
+  const brightness = (r*299 + g*587 + b*114)/1000;
+  document.body.style.color = brightness > 128 ? '#000000' : '#ffffff';
 
-      // Chrome top bar
-      themeMeta.setAttribute('content', '#ffffff');
+  // Chromium browsers + Safari 17+
+  themeMeta.setAttribute('content', color);
 
-      // iOS status bar mode
-      iosMeta.setAttribute('content', 'default');
-    }
+  // iOS Safari fallback (older versions)
+  iosMeta.setAttribute('content', brightness > 128 ? 'default' : 'black-translucent');
 
-    const setDarkTheme = () => {
-      document.body.style.background = '#000000';
-      document.body.style.color = '#ffffff';
+  // Windows pinned tiles
+  msMeta.setAttribute('content', color);
+}
 
-      themeMeta.setAttribute('content', '#000000');
-      iosMeta.setAttribute('content', 'black-translucent');
-    }
+// Event listener for color picker
+colorInput.addEventListener('input', e => updateTheme(e.target.value));
 
-    document.getElementById('light').addEventListener('click', setLightTheme);
-    document.getElementById('dark').addEventListener('click', setDarkTheme);
-  </script>
+// Initialize
+updateTheme(colorInput.value);
+</script>
 </body>
 </html>
