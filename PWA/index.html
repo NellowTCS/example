@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic PWA Top Bar</title>
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Chrome theme color -->
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- iOS Safari status bar -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      transition: background 0.3s, color 0.3s;
+      text-align: center;
+      padding-top: 50px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Top Bar Example</h1>
+  <p>Switch theme to see the top bar color change on Chrome and status bar mode on iOS.</p>
+  <button id="light">Light Theme</button>
+  <button id="dark">Dark Theme</button>
+
+  <script>
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    const iosMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+
+    const setLightTheme = () => {
+      // Page colors
+      document.body.style.background = '#ffffff';
+      document.body.style.color = '#000000';
+
+      // Chrome top bar
+      themeMeta.setAttribute('content', '#ffffff');
+
+      // iOS status bar mode
+      iosMeta.setAttribute('content', 'default');
+    }
+
+    const setDarkTheme = () => {
+      document.body.style.background = '#000000';
+      document.body.style.color = '#ffffff';
+
+      themeMeta.setAttribute('content', '#000000');
+      iosMeta.setAttribute('content', 'black-translucent');
+    }
+
+    document.getElementById('light').addEventListener('click', setLightTheme);
+    document.getElementById('dark').addEventListener('click', setDarkTheme);
+  </script>
+</body>
+</html>
