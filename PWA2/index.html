@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Test theme-color with var()</title>
+
+  <!-- This alone does NOT work -->
+  <meta name="theme-color" content="var(--theme)">
+
+  <style>
+    :root {
+      --theme: #ff0000; /* red by default */
+      --bg: #ffffff;
+      --fg: #000000;
+    }
+    :root[data-theme="dark"] {
+      --theme: #000000; /* black for dark mode */
+      --bg: #111111;
+      --fg: #ffffff;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    button { margin-top: 1rem; padding: .5rem 1rem; }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Testing theme-color</h1>
+    <button onclick="toggleTheme()">Toggle Theme</button>
+  </div>
+
+  <script>
+    function updateMetaThemeColor() {
+      const themeColor = getComputedStyle(document.documentElement)
+        .getPropertyValue('--theme').trim();
+      const meta = document.querySelector('meta[name="theme-color"]');
+      meta.setAttribute('content', themeColor);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? '' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      updateMetaThemeColor();
+    }
+
+    // initialize
+    updateMetaThemeColor();
+  </script>
+</body>
+</html>
