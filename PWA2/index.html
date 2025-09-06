@@ -38,22 +38,12 @@
   </div>
 
   <script>
-    function updateMetaThemeColor() {
-      const themeColor = getComputedStyle(document.documentElement)
-        .getPropertyValue('--theme').trim();
-      const meta = document.querySelector('meta[name="theme-color"]');
-      meta.setAttribute('content', themeColor);
-    }
 
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? '' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      updateMetaThemeColor();
     }
-
-    // initialize
-    updateMetaThemeColor();
   </script>
 </body>
 </html>
