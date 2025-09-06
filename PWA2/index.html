@@ -1,21 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Test theme-color with var()</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auto Theme Demo</title>
 
-  <!-- This alone might not work -->
-  <meta name="theme-color" content="var(--theme)">
+  <!-- Static fallback -->
+  <meta name="theme-color" content="#ffffff">
 
   <style>
     :root {
-      --theme: #ff0000; /* red by default */
+      --theme: #ff0000;   /* default red */
       --bg: #ffffff;
       --fg: #000000;
     }
     :root[data-theme="dark"] {
-      --theme: #000000; /* black for dark mode */
+      --theme: #000000;   /* black for dark mode */
       --bg: #111111;
       --fg: #ffffff;
     }
@@ -23,28 +23,52 @@
       margin: 0;
       background: var(--bg);
       color: var(--fg);
+      font-family: sans-serif;
       display: grid;
       place-items: center;
       height: 100vh;
-      font-family: sans-serif;
     }
     button { margin-top: 1rem; padding: .5rem 1rem; }
   </style>
 </head>
 <body>
   <div>
-    <h1>Testing theme-color</h1>
-    <p>Probably won't work in your browser.</p>
+    <h1>Auto Theme Demo</h1>
     <button onclick="toggleTheme()">Toggle Theme</button>
   </div>
 
   <script>
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const color = getComputedStyle(document.documentElement)
+        .getPropertyValue('--theme').trim();
+      metaTheme.setAttribute('content', color);
+      localStorage.setItem('theme-choice', theme);
+    }
 
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? '' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
+      applyTheme(current === 'dark' ? 'light' : 'dark');
     }
+
+    // Auto-set theme on page load
+    const saved = localStorage.getItem('theme-choice');
+    if (saved) {
+      applyTheme(saved);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(prefersDark ? 'dark' : 'light');
+    }
+
+    // Optional: auto-update if system preference changes
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener('change', e => {
+      if (!localStorage.getItem('theme-choice')) {
+        applyTheme(e.matches ? 'dark' : 'light');
+      }
+    });
   </script>
 </body>
 </html>
