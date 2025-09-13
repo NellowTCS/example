@@ -4,6 +4,27 @@
   <meta charset="UTF-8" />
   <title>Table Example</title>
   <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
+      color: #333;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      color: #1e3a8a;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
     table {
       border-collapse: collapse;
       width: 50%;
@@ -20,8 +41,9 @@
   </style>
 </head>
 <body>
-  <h1>Simple Table</h1>
-  <table>
+  <div class="container">
+    <h1>Simple Table</h1>
+    <table>
     <thead>
       <tr><th>Name</th><th>Age</th><th>City</th></tr>
     </thead>
@@ -31,5 +53,6 @@
       <tr><td>Charlie</td><td>35</td><td>San Francisco</td></tr>
     </tbody>
   </table>
+  </div>
 </body>
 </html>

@@ -7,9 +7,11 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
       padding: 20px;
       text-align: center;
+      min-height: 100vh;
+      margin: 0;
     }
     canvas {
       border: 2px solid #333;
@@ -29,19 +31,33 @@
     button:hover {
       background-color: #005a99;
     }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
-  <h1>Canvas API Example</h1>
-  <p>Interactive canvas demonstrating drawing capabilities</p>
-  
-  <canvas id="drawingCanvas" width="400" height="300"></canvas>
-  <br>
-  
-  <button onclick="drawShapes()">Draw Shapes</button>
-  <button onclick="drawText()">Draw Text</button>
-  <button onclick="clearCanvas()">Clear Canvas</button>
-  <button onclick="drawAnimation()">Start Animation</button>
+  <div class="container">
+    <h1>Canvas API Example</h1>
+    <p>Interactive canvas demonstrating drawing capabilities</p>
+    
+    <canvas id="drawingCanvas" width="400" height="300"></canvas>
+    <br>
+    
+    <button onclick="drawShapes()">Draw Shapes</button>
+    <button onclick="drawText()">Draw Text</button>
+    <button onclick="clearCanvas()">Clear Canvas</button>
+    <button onclick="drawAnimation()">Start Animation</button>
+  </div>
 
   <script>
     const canvas = document.getElementById('drawingCanvas');

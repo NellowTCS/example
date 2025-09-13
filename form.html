@@ -3,6 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <title>Simple Form Example</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
+      color: #333;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      color: #1e3a8a;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+    input {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00bfff;
+    }
+    button {
+      padding: 15px;
+      font-size: 16px;
+      background: #00bfff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #1e3a8a;
+      transform: translateY(-2px);
+    }
+  </style>
   <script>
     function handleSubmit(event) {
       event.preventDefault();
@@ -12,11 +69,13 @@
   </script>
 </head>
 <body>
-  <h1>Simple Form</h1>
-  <form onsubmit="handleSubmit(event)">
-    <label for="name">Name:</label>
-    <input id="name" type="text" required />
-    <button type="submit">Submit</button>
-  </form>
+  <div class="container">
+    <h1>Simple Form</h1>
+    <form onsubmit="handleSubmit(event)">
+      <label for="name">Name:</label>
+      <input id="name" type="text" required />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </body>
 </html>
