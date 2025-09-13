@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Design Example</title>
+  <style>
+    /* CSS Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    /* Container with responsive max-width */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: #333;
+      transition: color 0.3s ease;
+    }
+
+    .nav-menu a:hover {
+      color: #667eea;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: #333;
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+
+    /* Main Content */
+    .main {
+      padding: 2rem 0;
+    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      background: #5a6fd8;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Grid System */
+    .grid {
+      display: grid;
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .grid-1 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    /* Flexbox Examples */
+    .flex-container {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .flex-item {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    /* Image Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .gallery-item {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+
+    /* Responsive Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 2rem 0;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #667eea;
+      color: white;
+    }
+
+    /* Responsive Typography */
+    .typography {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 10px;
+      margin: 2rem 0;
+    }
+
+    .typography h2 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    .typography p {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      margin-bottom: 1rem;
+    }
+
+    /* Media Query Examples */
+    .breakpoint-indicator {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      z-index: 1000;
+    }
+
+    .device-specific {
+      display: none;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 4px solid #667eea;
+    }
+
+    /* Mobile First Approach - Base styles for mobile */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-menu.active {
+        display: flex;
+      }
+
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .flex-container {
+        flex-direction: column;
+      }
+
+      .hero {
+        padding: 2rem 1rem;
+      }
+
+      .device-specific.mobile {
+        display: block;
+      }
+
+      .breakpoint-indicator::after {
+        content: "Mobile (≤768px)";
+      }
+    }
+
+    /* Tablet */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .device-specific.tablet {
+        display: block;
+      }
+
+      .breakpoint-indicator::after {
+        content: "Tablet (769px-1024px)";
+      }
+    }
+
+    /* Desktop */
+    @media (min-width: 1025px) {
+      .device-specific.desktop {
+        display: block;
+      }
+
+      .breakpoint-indicator::after {
+        content: "Desktop (≥1025px)";
+      }
+    }
+
+    /* Large Desktop */
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1400px;
+      }
+
+      .device-specific.large-desktop {
+        display: block;
+      }
+
+      .breakpoint-indicator::after {
+        content: "Large Desktop (≥1200px)";
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .header,
+      .hamburger,
+      .btn,
+      .breakpoint-indicator {
+        display: none;
+      }
+
+      .card,
+      .typography {
+        background: white;
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+      .card,
+      .typography,
+      .table-wrapper {
+        background: rgba(50, 50, 50, 0.9);
+        color: white;
+      }
+
+      th {
+        background: #555;
+      }
+    }
+
+    /* Reduced Motion Support */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="breakpoint-indicator"></div>
+
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="logo">ResponsiveWeb</div>
+        <div class="hamburger" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="container">
+      <section class="hero">
+        <h1>Responsive Design Example</h1>
+        <p>This page demonstrates various responsive design techniques including CSS Grid, Flexbox, media queries, and mobile-first design principles.</p>
+        <button class="btn" onclick="showResponsiveInfo()">Learn More</button>
+      </section>
+
+      <!-- Device-specific content -->
+      <div class="device-specific mobile">
+        <h3>📱 Mobile View</h3>
+        <p>You're viewing the mobile-optimized layout. Navigation is collapsed into a hamburger menu, and content is stacked vertically for better readability on small screens.</p>
+      </div>
+
+      <div class="device-specific tablet">
+        <h3>📱 Tablet View</h3>
+        <p>You're viewing the tablet layout. Content is displayed in a 2-column grid for optimal use of the medium screen space.</p>
+      </div>
+
+      <div class="device-specific desktop">
+        <h3>🖥️ Desktop View</h3>
+        <p>You're viewing the desktop layout with full navigation and multi-column content layout for larger screens.</p>
+      </div>
+
+      <div class="device-specific large-desktop">
+        <h3>🖥️ Large Desktop View</h3>
+        <p>You're viewing the large desktop layout with maximum content width and enhanced spacing for ultra-wide displays.</p>
+      </div>
+
+      <!-- Grid Examples -->
+      <section>
+        <div class="typography">
+          <h2>CSS Grid Examples</h2>
+          <p>CSS Grid provides powerful layout capabilities that automatically adapt to different screen sizes.</p>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card">
+            <h3>🔧 Feature 1</h3>
+            <p>Responsive grid that adapts from 4 columns on desktop to 1 column on mobile.</p>
+          </div>
+          <div class="card">
+            <h3>📱 Feature 2</h3>
+            <p>Mobile-first approach ensures optimal experience across all devices.</p>
+          </div>
+          <div class="card">
+            <h3>⚡ Feature 3</h3>
+            <p>Fast loading and optimized performance on all screen sizes.</p>
+          </div>
+          <div class="card">
+            <h3>🎨 Feature 4</h3>
+            <p>Beautiful design that scales seamlessly from mobile to desktop.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Flexbox Examples -->
+      <section>
+        <div class="typography">
+          <h2>Flexbox Layout</h2>
+          <p>Flexible box layout adapts to available space and wraps content as needed.</p>
+        </div>
+
+        <div class="flex-container">
+          <div class="flex-item">
+            <h4>Flexible Item 1</h4>
+            <p>This item grows and shrinks with available space.</p>
+          </div>
+          <div class="flex-item">
+            <h4>Flexible Item 2</h4>
+            <p>Equal distribution of space across flex items.</p>
+          </div>
+          <div class="flex-item">
+            <h4>Flexible Item 3</h4>
+            <p>Automatic wrapping when space becomes limited.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gallery Example -->
+      <section>
+        <div class="typography">
+          <h2>Responsive Gallery</h2>
+          <p>Auto-fit grid that creates as many columns as can fit, with a minimum width of 250px.</p>
+        </div>
+
+        <div class="gallery">
+          <div class="gallery-item">🖼️ Image 1</div>
+          <div class="gallery-item">🖼️ Image 2</div>
+          <div class="gallery-item">🖼️ Image 3</div>
+          <div class="gallery-item">🖼️ Image 4</div>
+          <div class="gallery-item">🖼️ Image 5</div>
+          <div class="gallery-item">🖼️ Image 6</div>
+        </div>
+      </section>
+
+      <!-- Responsive Table -->
+      <section>
+        <div class="typography">
+          <h2>Responsive Table</h2>
+          <p>Tables that scroll horizontally on small screens while maintaining readability.</p>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Device</th>
+                <th>Screen Size</th>
+                <th>Layout</th>
+                <th>Columns</th>
+                <th>Navigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mobile</td>
+                <td>≤ 768px</td>
+                <td>Single Column</td>
+                <td>1</td>
+                <td>Hamburger Menu</td>
+              </tr>
+              <tr>
+                <td>Tablet</td>
+                <td>769px - 1024px</td>
+                <td>Two Columns</td>
+                <td>2</td>
+                <td>Full Navigation</td>
+              </tr>
+              <tr>
+                <td>Desktop</td>
+                <td>1025px - 1199px</td>
+                <td>Multi-Column</td>
+                <td>3-4</td>
+                <td>Full Navigation</td>
+              </tr>
+              <tr>
+                <td>Large Desktop</td>
+                <td>≥ 1200px</td>
+                <td>Wide Layout</td>
+                <td>4+</td>
+                <td>Full Navigation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Typography Example -->
+      <section class="typography">
+        <h2>Responsive Typography</h2>
+        <p>This text uses clamp() function to scale smoothly between minimum and maximum sizes based on viewport width.</p>
+        <p>The clamp() CSS function takes three parameters: minimum value, preferred value (often using viewport units), and maximum value.</p>
+        <p><strong>Example:</strong> <code>font-size: clamp(1rem, 4vw, 2.5rem);</code></p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    function toggleMenu() {
+      const navMenu = document.getElementById('navMenu');
+      navMenu.classList.toggle('active');
+    }
+
+    function showResponsiveInfo() {
+      const width = window.innerWidth;
+      let deviceType = '';
+      
+      if (width <= 768) {
+        deviceType = 'Mobile';
+      } else if (width <= 1024) {
+        deviceType = 'Tablet';
+      } else if (width <= 1200) {
+        deviceType = 'Desktop';
+      } else {
+        deviceType = 'Large Desktop';
+      }
+
+      alert(`Current viewport: ${width}px wide\nDevice category: ${deviceType}\n\nTry resizing your browser window to see the layout adapt!`);
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const nav = document.querySelector('.nav');
+      const navMenu = document.getElementById('navMenu');
+      
+      if (!nav.contains(event.target)) {
+        navMenu.classList.remove('active');
+      }
+    });
+
+    // Update breakpoint indicator on resize
+    function updateBreakpointIndicator() {
+      const indicator = document.querySelector('.breakpoint-indicator');
+      const width = window.innerWidth;
+      
+      // The CSS handles the content, we just need to ensure it's visible
+      indicator.style.display = 'block';
+    }
+
+    window.addEventListener('resize', updateBreakpointIndicator);
+    updateBreakpointIndicator(); // Initial call
+  </script>
+</body>
+</html>

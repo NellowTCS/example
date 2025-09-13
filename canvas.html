@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas API Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    canvas {
+      border: 2px solid #333;
+      background-color: white;
+      margin: 10px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #005a99;
+    }
+  </style>
+</head>
+<body>
+  <h1>Canvas API Example</h1>
+  <p>Interactive canvas demonstrating drawing capabilities</p>
+  
+  <canvas id="drawingCanvas" width="400" height="300"></canvas>
+  <br>
+  
+  <button onclick="drawShapes()">Draw Shapes</button>
+  <button onclick="drawText()">Draw Text</button>
+  <button onclick="clearCanvas()">Clear Canvas</button>
+  <button onclick="drawAnimation()">Start Animation</button>
+
+  <script>
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    let animationId;
+
+    function drawShapes() {
+      clearCanvas();
+      
+      // Draw rectangle
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fillRect(50, 50, 100, 80);
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(250, 90, 40, 0, 2 * Math.PI);
+      ctx.fillStyle = '#4ecdc4';
+      ctx.fill();
+      
+      // Draw triangle
+      ctx.beginPath();
+      ctx.moveTo(150, 200);
+      ctx.lineTo(100, 250);
+      ctx.lineTo(200, 250);
+      ctx.closePath();
+      ctx.fillStyle = '#45b7d1';
+      ctx.fill();
+      
+      // Draw line
+      ctx.beginPath();
+      ctx.moveTo(250, 200);
+      ctx.lineTo(350, 250);
+      ctx.strokeStyle = '#96ceb4';
+      ctx.lineWidth = 5;
+      ctx.stroke();
+    }
+
+    function drawText() {
+      clearCanvas();
+      ctx.font = '24px Arial';
+      ctx.fillStyle = '#333';
+      ctx.fillText('Canvas Text!', 120, 150);
+      
+      ctx.font = '16px Arial';
+      ctx.fillStyle = '#666';
+      ctx.fillText('HTML5 Canvas API Demo', 100, 180);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    }
+
+    function drawAnimation() {
+      clearCanvas();
+      let x = 0;
+      let y = 150;
+      let dx = 2;
+      
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw bouncing ball
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, 2 * Math.PI);
+        ctx.fillStyle = '#e74c3c';
+        ctx.fill();
+        
+        x += dx;
+        if (x > canvas.width - 20 || x < 20) {
+          dx = -dx;
+        }
+        
+        animationId = requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    // Initialize with some shapes
+    drawShapes();
+  </script>
+</body>
+</html>

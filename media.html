@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Elements Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    .media-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    video, audio {
+      width: 100%;
+      max-width: 600px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .controls {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 4px solid #4ecdc4;
+    }
+
+    .status {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .media-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .info-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .progress-container {
+      margin: 10px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ecdc4, #44a08d);
+      width: 0%;
+      transition: width 0.1s ease;
+    }
+
+    .volume-slider {
+      width: 100px;
+      margin: 0 10px;
+    }
+
+    .media-placeholder {
+      width: 100%;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 10px 0;
+    }
+
+    .recorder-section {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .recording-indicator {
+      width: 12px;
+      height: 12px;
+      background: red;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 Media Elements Example</h1>
+    <p style="text-align: center;">Comprehensive HTML5 audio and video API demonstrations</p>
+  </div>
+
+  <!-- Video Section -->
+  <div class="container">
+    <div class="media-section">
+      <h2>📹 Video Example</h2>
+      
+      <div class="info-box">
+        <strong>Note:</strong> This example uses a placeholder video. In production, replace with actual video files (MP4, WebM, OGV for cross-browser compatibility).
+      </div>
+
+      <!-- Placeholder for video - in real app, use actual video sources -->
+      <div class="media-placeholder">
+        Video would appear here<br>
+        <small>(Simulated for demonstration)</small>
+      </div>
+
+      <video id="demoVideo" controls preload="metadata" style="display: none;">
+        <source src="demo-video.mp4" type="video/mp4">
+        <source src="demo-video.webm" type="video/webm">
+        <p>Your browser doesn't support video.</p>
+      </video>
+
+      <div class="controls">
+        <button onclick="playPauseVideo()">▶️ Play/Pause</button>
+        <button onclick="seekVideo(-10)">⏪ -10s</button>
+        <button onclick="seekVideo(10)">⏩ +10s</button>
+        <button onclick="toggleMute('video')">🔇 Mute</button>
+        <button onclick="toggleFullscreen()">🔳 Fullscreen</button>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar" onclick="setVideoProgress(event)">
+          <div class="progress-fill" id="videoProgress"></div>
+        </div>
+      </div>
+
+      <div class="media-info" id="videoInfo">
+        <div class="info-item">Duration: <span id="videoDuration">--:--</span></div>
+        <div class="info-item">Current Time: <span id="videoCurrentTime">--:--</span></div>
+        <div class="info-item">Volume: <span id="videoVolume">100%</span></div>
+        <div class="info-item">Status: <span id="videoStatus">Ready</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Section -->
+  <div class="container">
+    <div class="media-section">
+      <h2>🎵 Audio Example</h2>
+      
+      <div class="info-box">
+        <strong>Features:</strong> Custom controls, progress tracking, volume control, and playback speed adjustment.
+      </div>
+
+      <!-- Placeholder for audio -->
+      <div class="media-placeholder">
+        Audio Player Interface<br>
+        <small>(Simulated audio controls)</small>
+      </div>
+
+      <audio id="demoAudio" preload="metadata" style="display: none;">
+        <source src="demo-audio.mp3" type="audio/mpeg">
+        <source src="demo-audio.ogg" type="audio/ogg">
+        <p>Your browser doesn't support audio.</p>
+      </audio>
+
+      <div class="controls">
+        <button onclick="playPauseAudio()">▶️ Play/Pause</button>
+        <button onclick="stopAudio()">⏹️ Stop</button>
+        <button onclick="seekAudio(-5)">⏪ -5s</button>
+        <button onclick="seekAudio(5)">⏩ +5s</button>
+        <button onclick="toggleMute('audio')">🔇 Mute</button>
+        <br>
+        <label>Volume: </label>
+        <input type="range" class="volume-slider" min="0" max="100" value="50" onchange="setVolume('audio', this.value)">
+        <label>Speed: </label>
+        <select onchange="setPlaybackRate('audio', this.value)">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar" onclick="setAudioProgress(event)">
+          <div class="progress-fill" id="audioProgress"></div>
+        </div>
+      </div>
+
+      <div class="media-info" id="audioInfo">
+        <div class="info-item">Duration: <span id="audioDuration">--:--</span></div>
+        <div class="info-item">Current Time: <span id="audioCurrentTime">--:--</span></div>
+        <div class="info-item">Volume: <span id="audioVolume">50%</span></div>
+        <div class="info-item">Speed: <span id="audioSpeed">1x</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media Recorder Section -->
+  <div class="container">
+    <div class="recorder-section">
+      <h2>🎤 Media Recording (Audio)</h2>
+      
+      <div class="info-box">
+        <strong>Note:</strong> Requires microphone permission. This demonstrates the MediaRecorder API for capturing audio.
+      </div>
+
+      <div class="controls">
+        <button onclick="startRecording()" id="recordBtn">🎤 Start Recording</button>
+        <button onclick="stopRecording()" id="stopRecordBtn" disabled>⏹️ Stop Recording</button>
+        <button onclick="playRecording()" id="playRecordBtn" disabled>▶️ Play Recording</button>
+        <button onclick="downloadRecording()" id="downloadBtn" disabled>💾 Download</button>
+      </div>
+
+      <div id="recordingStatus" class="status">Status: Ready to record</div>
+      
+      <audio id="recordedAudio" controls style="display: none; margin-top: 15px;"></audio>
+    </div>
+  </div>
+
+  <!-- API Information -->
+  <div class="container">
+    <h2>📋 Media API Features</h2>
+    <div class="media-info">
+      <div class="info-item">
+        <h4>HTML5 Video</h4>
+        <ul style="text-align: left; font-size: 14px;">
+          <li>Multiple format support</li>
+          <li>Custom controls</li>
+          <li>Fullscreen API</li>
+          <li>Progress tracking</li>
+        </ul>
+      </div>
+      <div class="info-item">
+        <h4>HTML5 Audio</h4>
+        <ul style="text-align: left; font-size: 14px;">
+          <li>Volume control</li>
+          <li>Playback speed</li>
+          <li>Seeking capabilities</li>
+          <li>Event handling</li>
+        </ul>
+      </div>
+      <div class="info-item">
+        <h4>MediaRecorder API</h4>
+        <ul style="text-align: left; font-size: 14px;">
+          <li>Audio recording</li>
+          <li>Real-time capture</li>
+          <li>Blob generation</li>
+          <li>Download support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recordedBlob;
+
+    // Simulate media elements for demonstration
+    const simulatedVideo = {
+      duration: 120,
+      currentTime: 0,
+      volume: 1,
+      paused: true,
+      muted: false
+    };
+
+    const simulatedAudio = {
+      duration: 180,
+      currentTime: 0,
+      volume: 0.5,
+      paused: true,
+      muted: false,
+      playbackRate: 1
+    };
+
+    // Video controls
+    function playPauseVideo() {
+      simulatedVideo.paused = !simulatedVideo.paused;
+      document.getElementById('videoStatus').textContent = simulatedVideo.paused ? 'Paused' : 'Playing';
+      
+      if (!simulatedVideo.paused) {
+        simulateVideoPlayback();
+      }
+    }
+
+    function seekVideo(seconds) {
+      simulatedVideo.currentTime = Math.max(0, Math.min(simulatedVideo.duration, simulatedVideo.currentTime + seconds));
+      updateVideoDisplay();
+    }
+
+    function setVideoProgress(event) {
+      const rect = event.target.getBoundingClientRect();
+      const pos = (event.clientX - rect.left) / rect.width;
+      simulatedVideo.currentTime = pos * simulatedVideo.duration;
+      updateVideoDisplay();
+    }
+
+    function toggleFullscreen() {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        document.documentElement.requestFullscreen();
+      }
+    }
+
+    function simulateVideoPlayback() {
+      if (!simulatedVideo.paused && simulatedVideo.currentTime < simulatedVideo.duration) {
+        setTimeout(() => {
+          simulatedVideo.currentTime += 0.1;
+          updateVideoDisplay();
+          if (!simulatedVideo.paused) simulateVideoPlayback();
+        }, 100);
+      }
+    }
+
+    function updateVideoDisplay() {
+      const progress = (simulatedVideo.currentTime / simulatedVideo.duration) * 100;
+      document.getElementById('videoProgress').style.width = progress + '%';
+      document.getElementById('videoCurrentTime').textContent = formatTime(simulatedVideo.currentTime);
+      document.getElementById('videoDuration').textContent = formatTime(simulatedVideo.duration);
+      document.getElementById('videoVolume').textContent = Math.round(simulatedVideo.volume * 100) + '%';
+    }
+
+    // Audio controls
+    function playPauseAudio() {
+      simulatedAudio.paused = !simulatedAudio.paused;
+      
+      if (!simulatedAudio.paused) {
+        simulateAudioPlayback();
+      }
+    }
+
+    function stopAudio() {
+      simulatedAudio.paused = true;
+      simulatedAudio.currentTime = 0;
+      updateAudioDisplay();
+    }
+
+    function seekAudio(seconds) {
+      simulatedAudio.currentTime = Math.max(0, Math.min(simulatedAudio.duration, simulatedAudio.currentTime + seconds));
+      updateAudioDisplay();
+    }
+
+    function setAudioProgress(event) {
+      const rect = event.target.getBoundingClientRect();
+      const pos = (event.clientX - rect.left) / rect.width;
+      simulatedAudio.currentTime = pos * simulatedAudio.duration;
+      updateAudioDisplay();
+    }
+
+    function setVolume(type, value) {
+      const volume = value / 100;
+      if (type === 'audio') {
+        simulatedAudio.volume = volume;
+        document.getElementById('audioVolume').textContent = value + '%';
+      }
+    }
+
+    function setPlaybackRate(type, rate) {
+      if (type === 'audio') {
+        simulatedAudio.playbackRate = parseFloat(rate);
+        document.getElementById('audioSpeed').textContent = rate + 'x';
+      }
+    }
+
+    function toggleMute(type) {
+      if (type === 'video') {
+        simulatedVideo.muted = !simulatedVideo.muted;
+      } else if (type === 'audio') {
+        simulatedAudio.muted = !simulatedAudio.muted;
+      }
+    }
+
+    function simulateAudioPlayback() {
+      if (!simulatedAudio.paused && simulatedAudio.currentTime < simulatedAudio.duration) {
+        setTimeout(() => {
+          simulatedAudio.currentTime += 0.1 * simulatedAudio.playbackRate;
+          updateAudioDisplay();
+          if (!simulatedAudio.paused) simulateAudioPlayback();
+        }, 100);
+      }
+    }
+
+    function updateAudioDisplay() {
+      const progress = (simulatedAudio.currentTime / simulatedAudio.duration) * 100;
+      document.getElementById('audioProgress').style.width = progress + '%';
+      document.getElementById('audioCurrentTime').textContent = formatTime(simulatedAudio.currentTime);
+      document.getElementById('audioDuration').textContent = formatTime(simulatedAudio.duration);
+    }
+
+    // Recording functions
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.addEventListener('dataavailable', event => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        });
+        
+        mediaRecorder.addEventListener('stop', () => {
+          recordedBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+          const audioURL = URL.createObjectURL(recordedBlob);
+          
+          const recordedAudio = document.getElementById('recordedAudio');
+          recordedAudio.src = audioURL;
+          recordedAudio.style.display = 'block';
+          
+          document.getElementById('playRecordBtn').disabled = false;
+          document.getElementById('downloadBtn').disabled = false;
+          document.getElementById('recordingStatus').textContent = 'Recording completed!';
+        });
+        
+        mediaRecorder.start();
+        
+        document.getElementById('recordBtn').disabled = true;
+        document.getElementById('stopRecordBtn').disabled = false;
+        document.getElementById('recordingStatus').innerHTML = '<span class="recording-indicator"></span>Recording in progress...';
+        
+      } catch (error) {
+        console.error('Error accessing microphone:', error);
+        document.getElementById('recordingStatus').textContent = 'Error: Unable to access microphone. Please grant permission.';
+      }
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        
+        document.getElementById('recordBtn').disabled = false;
+        document.getElementById('stopRecordBtn').disabled = true;
+      }
+    }
+
+    function playRecording() {
+      const recordedAudio = document.getElementById('recordedAudio');
+      recordedAudio.play();
+    }
+
+    function downloadRecording() {
+      if (recordedBlob) {
+        const url = URL.createObjectURL(recordedBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `recording-${new Date().getTime()}.webm`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    // Utility functions
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Initialize displays
+    updateVideoDisplay();
+    updateAudioDisplay();
+  </script>
+</body>
+</html>

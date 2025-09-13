@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Storage API Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005a99;
+    }
+    .storage-display {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      min-height: 50px;
+    }
+    .clear-btn {
+      background-color: #dc3545;
+    }
+    .clear-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web Storage API Example</h1>
+  
+  <div class="container">
+    <h2>localStorage Example</h2>
+    <p>Data persists until manually cleared</p>
+    <input type="text" id="localKey" placeholder="Key">
+    <input type="text" id="localValue" placeholder="Value">
+    <button onclick="setLocalStorage()">Set</button>
+    <button onclick="getLocalStorage()">Get</button>
+    <button onclick="removeLocalStorage()">Remove</button>
+    <button onclick="clearLocalStorage()" class="clear-btn">Clear All</button>
+    
+    <div class="storage-display" id="localDisplay"></div>
+  </div>
+
+  <div class="container">
+    <h2>sessionStorage Example</h2>
+    <p>Data persists only for the browser session</p>
+    <input type="text" id="sessionKey" placeholder="Key">
+    <input type="text" id="sessionValue" placeholder="Value">
+    <button onclick="setSessionStorage()">Set</button>
+    <button onclick="getSessionStorage()">Get</button>
+    <button onclick="removeSessionStorage()">Remove</button>
+    <button onclick="clearSessionStorage()" class="clear-btn">Clear All</button>
+    
+    <div class="storage-display" id="sessionDisplay"></div>
+  </div>
+
+  <div class="container">
+    <h2>Storage Inspector</h2>
+    <button onclick="showAllStorage()">Show All Storage</button>
+    <div class="storage-display" id="allStorageDisplay"></div>
+  </div>
+
+  <script>
+    // localStorage functions
+    function setLocalStorage() {
+      const key = document.getElementById('localKey').value;
+      const value = document.getElementById('localValue').value;
+      
+      if (key && value) {
+        localStorage.setItem(key, value);
+        document.getElementById('localDisplay').innerHTML = `Set: ${key} = ${value}`;
+        document.getElementById('localKey').value = '';
+        document.getElementById('localValue').value = '';
+      } else {
+        alert('Please enter both key and value');
+      }
+    }
+
+    function getLocalStorage() {
+      const key = document.getElementById('localKey').value;
+      
+      if (key) {
+        const value = localStorage.getItem(key);
+        document.getElementById('localDisplay').innerHTML = value 
+          ? `Retrieved: ${key} = ${value}` 
+          : `Key "${key}" not found`;
+      } else {
+        alert('Please enter a key to retrieve');
+      }
+    }
+
+    function removeLocalStorage() {
+      const key = document.getElementById('localKey').value;
+      
+      if (key) {
+        localStorage.removeItem(key);
+        document.getElementById('localDisplay').innerHTML = `Removed key: ${key}`;
+        document.getElementById('localKey').value = '';
+      } else {
+        alert('Please enter a key to remove');
+      }
+    }
+
+    function clearLocalStorage() {
+      localStorage.clear();
+      document.getElementById('localDisplay').innerHTML = 'localStorage cleared!';
+    }
+
+    // sessionStorage functions
+    function setSessionStorage() {
+      const key = document.getElementById('sessionKey').value;
+      const value = document.getElementById('sessionValue').value;
+      
+      if (key && value) {
+        sessionStorage.setItem(key, value);
+        document.getElementById('sessionDisplay').innerHTML = `Set: ${key} = ${value}`;
+        document.getElementById('sessionKey').value = '';
+        document.getElementById('sessionValue').value = '';
+      } else {
+        alert('Please enter both key and value');
+      }
+    }
+
+    function getSessionStorage() {
+      const key = document.getElementById('sessionKey').value;
+      
+      if (key) {
+        const value = sessionStorage.getItem(key);
+        document.getElementById('sessionDisplay').innerHTML = value 
+          ? `Retrieved: ${key} = ${value}` 
+          : `Key "${key}" not found`;
+      } else {
+        alert('Please enter a key to retrieve');
+      }
+    }
+
+    function removeSessionStorage() {
+      const key = document.getElementById('sessionKey').value;
+      
+      if (key) {
+        sessionStorage.removeItem(key);
+        document.getElementById('sessionDisplay').innerHTML = `Removed key: ${key}`;
+        document.getElementById('sessionKey').value = '';
+      } else {
+        alert('Please enter a key to remove');
+      }
+    }
+
+    function clearSessionStorage() {
+      sessionStorage.clear();
+      document.getElementById('sessionDisplay').innerHTML = 'sessionStorage cleared!';
+    }
+
+    // Inspector function
+    function showAllStorage() {
+      let display = '<h3>localStorage:</h3>';
+      if (localStorage.length === 0) {
+        display += '<p>No items in localStorage</p>';
+      } else {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          display += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+      }
+
+      display += '<h3>sessionStorage:</h3>';
+      if (sessionStorage.length === 0) {
+        display += '<p>No items in sessionStorage</p>';
+      } else {
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          const value = sessionStorage.getItem(key);
+          display += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+      }
+
+      document.getElementById('allStorageDisplay').innerHTML = display;
+    }
+
+    // Initialize display
+    showAllStorage();
+  </script>
+</body>
+</html>

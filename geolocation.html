@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geolocation API Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #007acc;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #005a99;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .info-box {
+      background-color: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    .error-box {
+      background-color: #ffe7e7;
+      border: 1px solid #ffb3b3;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+      color: #d8000c;
+    }
+    .success-box {
+      background-color: #e7ffe7;
+      border: 1px solid #b3ffb3;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+      color: #4f8a10;
+    }
+    .coordinate {
+      font-family: monospace;
+      background-color: #f8f9fa;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+    #status {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    .map-placeholder {
+      width: 100%;
+      height: 200px;
+      background-color: #f8f9fa;
+      border: 2px dashed #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Geolocation API Example</h1>
+  
+  <div class="container">
+    <div class="info-box">
+      <strong>Note:</strong> Geolocation requires HTTPS in production and user permission. 
+      This example demonstrates the API usage and will show results if location access is granted.
+    </div>
+
+    <div id="status">Status: Ready</div>
+    
+    <button onclick="getCurrentPosition()" id="getLocationBtn">Get Current Location</button>
+    <button onclick="watchPosition()" id="watchBtn">Start Watching Position</button>
+    <button onclick="stopWatching()" id="stopWatchBtn" disabled>Stop Watching</button>
+    
+    <div id="result"></div>
+    
+    <div class="map-placeholder" id="mapPlaceholder">
+      Map would appear here with actual coordinates
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Location History</h2>
+    <button onclick="clearHistory()">Clear History</button>
+    <div id="locationHistory"></div>
+  </div>
+
+  <script>
+    let watchId = null;
+    let locationHistory = [];
+
+    function updateStatus(message, type = 'info') {
+      const statusDiv = document.getElementById('status');
+      statusDiv.textContent = `Status: ${message}`;
+      statusDiv.className = type;
+    }
+
+    function checkGeolocationSupport() {
+      if (!navigator.geolocation) {
+        document.getElementById('result').innerHTML = 
+          '<div class="error-box">Geolocation is not supported by this browser.</div>';
+        document.getElementById('getLocationBtn').disabled = true;
+        document.getElementById('watchBtn').disabled = true;
+        return false;
+      }
+      return true;
+    }
+
+    function displayPosition(position) {
+      const coords = position.coords;
+      const timestamp = new Date(position.timestamp).toLocaleString();
+      
+      // Add to history
+      locationHistory.push({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        accuracy: coords.accuracy,
+        timestamp: timestamp
+      });
+
+      const resultHTML = `
+        <div class="success-box">
+          <h3>Location Retrieved Successfully!</h3>
+          <p><strong>Latitude:</strong> <span class="coordinate">${coords.latitude.toFixed(6)}</span></p>
+          <p><strong>Longitude:</strong> <span class="coordinate">${coords.longitude.toFixed(6)}</span></p>
+          <p><strong>Accuracy:</strong> ±${coords.accuracy.toFixed(0)} meters</p>
+          ${coords.altitude ? `<p><strong>Altitude:</strong> ${coords.altitude.toFixed(2)} meters</p>` : ''}
+          ${coords.altitudeAccuracy ? `<p><strong>Altitude Accuracy:</strong> ±${coords.altitudeAccuracy.toFixed(0)} meters</p>` : ''}
+          ${coords.heading ? `<p><strong>Heading:</strong> ${coords.heading.toFixed(0)}°</p>` : ''}
+          ${coords.speed ? `<p><strong>Speed:</strong> ${coords.speed.toFixed(2)} m/s</p>` : ''}
+          <p><strong>Timestamp:</strong> ${timestamp}</p>
+        </div>
+      `;
+
+      document.getElementById('result').innerHTML = resultHTML;
+      
+      // Update map placeholder
+      document.getElementById('mapPlaceholder').innerHTML = 
+        `<div>📍 Lat: ${coords.latitude.toFixed(4)}, Lng: ${coords.longitude.toFixed(4)}</div>`;
+      
+      updateLocationHistory();
+      updateStatus('Location retrieved successfully', 'success');
+    }
+
+    function displayError(error) {
+      let errorMessage = '';
+      
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage = 'User denied the request for Geolocation.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage = 'Location information is unavailable.';
+          break;
+        case error.TIMEOUT:
+          errorMessage = 'The request to get user location timed out.';
+          break;
+        default:
+          errorMessage = 'An unknown error occurred.';
+          break;
+      }
+
+      const errorHTML = `
+        <div class="error-box">
+          <h3>Error Getting Location</h3>
+          <p><strong>Error:</strong> ${errorMessage}</p>
+          <p><strong>Code:</strong> ${error.code}</p>
+        </div>
+      `;
+
+      document.getElementById('result').innerHTML = errorHTML;
+      updateStatus(`Error: ${errorMessage}`, 'error');
+    }
+
+    function getCurrentPosition() {
+      if (!checkGeolocationSupport()) return;
+
+      updateStatus('Getting current position...', 'info');
+      
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      };
+
+      navigator.geolocation.getCurrentPosition(displayPosition, displayError, options);
+    }
+
+    function watchPosition() {
+      if (!checkGeolocationSupport()) return;
+
+      updateStatus('Starting position watch...', 'info');
+      
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000
+      };
+
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          displayPosition(position);
+          updateStatus('Watching position (updates automatically)', 'info');
+        },
+        displayError,
+        options
+      );
+
+      document.getElementById('watchBtn').disabled = true;
+      document.getElementById('stopWatchBtn').disabled = false;
+    }
+
+    function stopWatching() {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        updateStatus('Stopped watching position', 'info');
+        
+        document.getElementById('watchBtn').disabled = false;
+        document.getElementById('stopWatchBtn').disabled = true;
+      }
+    }
+
+    function updateLocationHistory() {
+      const historyDiv = document.getElementById('locationHistory');
+      
+      if (locationHistory.length === 0) {
+        historyDiv.innerHTML = '<p>No location history yet.</p>';
+        return;
+      }
+
+      let historyHTML = '<div class="info-box"><h3>Recent Locations:</h3>';
+      
+      // Show last 5 locations
+      const recentLocations = locationHistory.slice(-5).reverse();
+      
+      recentLocations.forEach((location, index) => {
+        historyHTML += `
+          <p><strong>${index + 1}.</strong> 
+          <span class="coordinate">${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}</span>
+          (±${location.accuracy.toFixed(0)}m) - ${location.timestamp}</p>
+        `;
+      });
+      
+      historyHTML += '</div>';
+      historyDiv.innerHTML = historyHTML;
+    }
+
+    function clearHistory() {
+      locationHistory = [];
+      updateLocationHistory();
+      updateStatus('Location history cleared', 'info');
+    }
+
+    // Initialize
+    checkGeolocationSupport();
+    updateLocationHistory();
+  </script>
+</body>
+</html>
