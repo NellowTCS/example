@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Accessibility Examples</title>
+  <style>
+    /* Skip link for keyboard navigation */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+      text-decoration: none;
+      border-radius: 4px;
+      z-index: 1000;
+    }
+
+    .skip-link:focus {
+      top: 6px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h1, h2, h3 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+
+    .section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+
+    /* Focus styles for better keyboard navigation */
+    button:focus,
+    input:focus,
+    select:focus,
+    textarea:focus,
+    a:focus {
+      outline: 3px solid #3498db;
+      outline-offset: 2px;
+    }
+
+    /* Button styles */
+    .btn {
+      padding: 12px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-success {
+      background: #27ae60;
+    }
+
+    .btn-success:hover {
+      background: #229954;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    /* Form styles */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #3498db;
+    }
+
+    .error {
+      border-color: #e74c3c;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* ARIA live region */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .live-region {
+      background: #2ecc71;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .live-region.show {
+      display: block;
+    }
+
+    /* Color contrast examples */
+    .contrast-good {
+      background: #2c3e50;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 5px 0;
+    }
+
+    .contrast-poor {
+      background: #f39c12;
+      color: #fff3cd;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 5px 0;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      .container {
+        border: 2px solid #000;
+      }
+      
+      .btn {
+        border: 2px solid #000;
+      }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background: #3498db;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .modal-close:hover {
+      color: #e74c3c;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      background: #ecf0f1;
+      border-radius: 10px;
+      padding: 3px;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      background: #3498db;
+      height: 20px;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Carousel */
+    .carousel {
+      position: relative;
+      background: #f8f9fa;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      padding: 2rem;
+      text-align: center;
+      background: linear-gradient(45deg, #3498db, #2ecc71);
+      color: white;
+    }
+
+    .carousel-controls {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .carousel-button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .carousel-button:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="container">
+    <header>
+      <h1 id="main-heading">Web Accessibility Examples</h1>
+      <p>This page demonstrates various web accessibility (WCAG 2.1) techniques and best practices.</p>
+    </header>
+
+    <main id="main-content">
+      <!-- Semantic HTML -->
+      <section class="section">
+        <h2>1. Semantic HTML Structure</h2>
+        <p>This page uses proper semantic HTML elements like <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, and <code>&lt;nav&gt;</code> for screen reader navigation.</p>
+        
+        <nav aria-label="Example navigation">
+          <ul>
+            <li><a href="#forms">Accessible Forms</a></li>
+            <li><a href="#images">Images & Alt Text</a></li>
+            <li><a href="#tables">Data Tables</a></li>
+            <li><a href="#interactive">Interactive Elements</a></li>
+          </ul>
+        </nav>
+      </section>
+
+      <!-- Skip Links -->
+      <section class="section">
+        <h2>2. Skip Links</h2>
+        <p>A skip link is provided at the top of the page (press Tab to see it) allowing keyboard users to skip directly to main content.</p>
+        <p><strong>Try it:</strong> Press Tab when this page loads to see the skip link appear.</p>
+      </section>
+
+      <!-- Forms -->
+      <section class="section" id="forms">
+        <h2>3. Accessible Forms</h2>
+        <p>Forms with proper labels, error handling, and ARIA attributes.</p>
+        
+        <form onsubmit="validateForm(event)" novalidate>
+          <div class="form-group">
+            <label for="username">Username (required):</label>
+            <input type="text" id="username" name="username" required aria-describedby="username-error">
+            <div id="username-error" class="error-message" role="alert" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address (required):</label>
+            <input type="email" id="email" name="email" required aria-describedby="email-error">
+            <div id="email-error" class="error-message" role="alert" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="country">Country:</label>
+            <select id="country" name="country">
+              <option value="">Select a country</option>
+              <option value="us">United States</option>
+              <option value="ca">Canada</option>
+              <option value="uk">United Kingdom</option>
+              <option value="au">Australia</option>
+            </select>
+          </div>
+
+          <fieldset>
+            <legend>Preferred Contact Method</legend>
+            <label>
+              <input type="radio" name="contact" value="email" checked>
+              Email
+            </label>
+            <label>
+              <input type="radio" name="contact" value="phone">
+              Phone
+            </label>
+            <label>
+              <input type="radio" name="contact" value="mail">
+              Mail
+            </label>
+          </fieldset>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="newsletter">
+              Subscribe to newsletter
+            </label>
+          </div>
+
+          <button type="submit" class="btn">Submit Form</button>
+        </form>
+
+        <div id="form-success" class="live-region" role="alert" aria-live="polite"></div>
+      </section>
+
+      <!-- Images -->
+      <section class="section" id="images">
+        <h2>4. Images and Alt Text</h2>
+        <p>Proper use of alt attributes for different types of images:</p>
+        
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+          <div style="width: 100px; height: 100px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">Chart</div>
+          <p><strong>Informative image:</strong> Alt text describes the content (e.g., "Bar chart showing 60% increase in sales")</p>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1rem;">
+          <div style="width: 100px; height: 100px; background: #e74c3c; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">Art</div>
+          <p><strong>Decorative image:</strong> Alt text is empty (alt="") as it doesn't add meaningful content</p>
+        </div>
+      </section>
+
+      <!-- Tables -->
+      <section class="section" id="tables">
+        <h2>5. Accessible Data Tables</h2>
+        <p>Tables with proper headers and scope attributes for screen readers:</p>
+        
+        <table role="table" aria-label="Quarterly Sales Data">
+          <caption>Quarterly Sales Data for 2023</caption>
+          <thead>
+            <tr>
+              <th scope="col">Quarter</th>
+              <th scope="col">Revenue</th>
+              <th scope="col">Growth</th>
+              <th scope="col">Region</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Q1</th>
+              <td>$125,000</td>
+              <td>+15%</td>
+              <td>North America</td>
+            </tr>
+            <tr>
+              <th scope="row">Q2</th>
+              <td>$140,000</td>
+              <td>+12%</td>
+              <td>Europe</td>
+            </tr>
+            <tr>
+              <th scope="row">Q3</th>
+              <td>$158,000</td>
+              <td>+18%</td>
+              <td>Asia Pacific</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Color Contrast -->
+      <section class="section">
+        <h2>6. Color Contrast Examples</h2>
+        <p>Text should have sufficient contrast against background colors:</p>
+        
+        <div class="contrast-good">
+          Good contrast: Dark text on light background (WCAG AA compliant)
+        </div>
+        
+        <div class="contrast-poor">
+          Poor contrast: This text may be hard to read for some users
+        </div>
+      </section>
+
+      <!-- Interactive Elements -->
+      <section class="section" id="interactive">
+        <h2>7. Interactive Elements</h2>
+        
+        <!-- Progress Bar -->
+        <h3>Progress Bar with ARIA</h3>
+        <div class="progress-container">
+          <div class="progress-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" aria-label="Loading progress" style="width: 65%;">
+            65%
+          </div>
+        </div>
+        <button class="btn" onclick="updateProgress()">Update Progress</button>
+
+        <!-- Button States -->
+        <h3>Button States</h3>
+        <button class="btn" onclick="toggleButton(this)">Toggle Me</button>
+        <button class="btn btn-success" disabled>Disabled Button</button>
+        <button class="btn btn-danger" onclick="showNotification()">Show Notification</button>
+
+        <!-- Modal -->
+        <h3>Accessible Modal</h3>
+        <button class="btn" onclick="openModal()">Open Modal</button>
+        
+        <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
+          <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">&times;</button>
+            <h3 id="modal-title">Modal Example</h3>
+            <p id="modal-description">This modal demonstrates proper focus management and ARIA attributes.</p>
+            <button class="btn" onclick="closeModal()">Close</button>
+          </div>
+        </div>
+
+        <!-- Carousel -->
+        <h3>Accessible Carousel</h3>
+        <div class="carousel" role="region" aria-label="Image carousel" aria-describedby="carousel-desc">
+          <p id="carousel-desc" class="sr-only">Use the previous and next buttons to navigate through carousel slides</p>
+          <div class="carousel-inner" id="carousel-inner">
+            <div class="carousel-slide" role="tabpanel" aria-label="Slide 1 of 3">
+              <h4>Slide 1</h4>
+              <p>First slide content with important information.</p>
+            </div>
+            <div class="carousel-slide" role="tabpanel" aria-label="Slide 2 of 3">
+              <h4>Slide 2</h4>
+              <p>Second slide with different content to explore.</p>
+            </div>
+            <div class="carousel-slide" role="tabpanel" aria-label="Slide 3 of 3">
+              <h4>Slide 3</h4>
+              <p>Third and final slide with conclusion.</p>
+            </div>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-button" onclick="previousSlide()" aria-label="Previous slide">‹ Previous</button>
+            <span aria-live="polite" aria-atomic="true" id="slide-status">Slide 1 of 3</span>
+            <button class="carousel-button" onclick="nextSlide()" aria-label="Next slide">Next ›</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ARIA Live Regions -->
+      <section class="section">
+        <h2>8. ARIA Live Regions</h2>
+        <p>Live regions announce dynamic content changes to screen readers:</p>
+        
+        <button class="btn" onclick="announceMessage()">Trigger Announcement</button>
+        <div id="live-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+        <div id="live-display" class="live-region"></div>
+      </section>
+
+      <!-- Keyboard Navigation -->
+      <section class="section">
+        <h2>9. Keyboard Navigation Tips</h2>
+        <ul>
+          <li><strong>Tab:</strong> Move forward through interactive elements</li>
+          <li><strong>Shift + Tab:</strong> Move backward through interactive elements</li>
+          <li><strong>Enter/Space:</strong> Activate buttons and links</li>
+          <li><strong>Arrow keys:</strong> Navigate within components (like carousels)</li>
+          <li><strong>Escape:</strong> Close modals or exit modes</li>
+        </ul>
+        <p><strong>Try it:</strong> Navigate this entire page using only your keyboard!</p>
+      </section>
+
+      <!-- Screen Reader Testing -->
+      <section class="section">
+        <h2>10. Screen Reader Testing</h2>
+        <p>Test with screen readers:</p>
+        <ul>
+          <li><strong>Windows:</strong> NVDA (free) or JAWS</li>
+          <li><strong>macOS:</strong> VoiceOver (built-in)</li>
+          <li><strong>Mobile:</strong> TalkBack (Android) or VoiceOver (iOS)</li>
+        </ul>
+        <p>This page is designed to work well with all these screen readers.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 3;
+    let progressValue = 65;
+
+    // Form validation
+    function validateForm(event) {
+      event.preventDefault();
+      
+      const username = document.getElementById('username');
+      const email = document.getElementById('email');
+      let isValid = true;
+
+      // Clear previous errors
+      clearErrors();
+
+      // Validate username
+      if (!username.value.trim()) {
+        showError('username', 'Username is required');
+        isValid = false;
+      }
+
+      // Validate email
+      if (!email.value.trim()) {
+        showError('email', 'Email is required');
+        isValid = false;
+      } else if (!isValidEmail(email.value)) {
+        showError('email', 'Please enter a valid email address');
+        isValid = false;
+      }
+
+      if (isValid) {
+        document.getElementById('form-success').textContent = 'Form submitted successfully!';
+        document.getElementById('form-success').classList.add('show');
+        setTimeout(() => {
+          document.getElementById('form-success').classList.remove('show');
+        }, 5000);
+      }
+    }
+
+    function showError(fieldName, message) {
+      const field = document.getElementById(fieldName);
+      const errorDiv = document.getElementById(fieldName + '-error');
+      
+      field.classList.add('error');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+      field.setAttribute('aria-invalid', 'true');
+    }
+
+    function clearErrors() {
+      const errorDivs = document.querySelectorAll('.error-message');
+      const fields = document.querySelectorAll('.error');
+      
+      errorDivs.forEach(div => {
+        div.classList.remove('show');
+        div.textContent = '';
+      });
+      
+      fields.forEach(field => {
+        field.classList.remove('error');
+        field.removeAttribute('aria-invalid');
+      });
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Progress bar
+    function updateProgress() {
+      progressValue = progressValue >= 100 ? 0 : progressValue + 15;
+      const progressBar = document.querySelector('.progress-bar');
+      progressBar.style.width = progressValue + '%';
+      progressBar.textContent = progressValue + '%';
+      progressBar.setAttribute('aria-valuenow', progressValue);
+      
+      announceMessage(`Progress updated to ${progressValue} percent`);
+    }
+
+    // Button toggle
+    function toggleButton(button) {
+      const isPressed = button.getAttribute('aria-pressed') === 'true';
+      button.setAttribute('aria-pressed', !isPressed);
+      button.textContent = isPressed ? 'Toggle Me' : 'Toggled!';
+      button.classList.toggle('btn-success');
+    }
+
+    // Modal functions
+    function openModal() {
+      const modal = document.getElementById('modal');
+      modal.style.display = 'block';
+      
+      // Focus the close button
+      setTimeout(() => {
+        modal.querySelector('.modal-close').focus();
+      }, 100);
+      
+      // Trap focus in modal
+      trapFocus(modal);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.style.display = 'none';
+      
+      // Return focus to the button that opened the modal
+      document.querySelector('button[onclick="openModal()"]').focus();
+    }
+
+    function trapFocus(element) {
+      const focusableElements = element.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      element.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === firstElement) {
+              lastElement.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              firstElement.focus();
+              e.preventDefault();
+            }
+          }
+        } else if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+    }
+
+    // Carousel functions
+    function updateCarousel() {
+      const inner = document.getElementById('carousel-inner');
+      inner.style.transform = `translateX(-${currentSlide * 100}%)`;
+      document.getElementById('slide-status').textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
+      
+      // Update button states
+      const prevBtn = document.querySelector('button[onclick="previousSlide()"]');
+      const nextBtn = document.querySelector('button[onclick="nextSlide()"]');
+      
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function previousSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateCarousel();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateCarousel();
+      }
+    }
+
+    // Live announcements
+    function announceMessage(message = 'This is a live announcement that screen readers will announce automatically!') {
+      const announcer = document.getElementById('live-announcer');
+      const display = document.getElementById('live-display');
+      
+      announcer.textContent = message;
+      display.textContent = message;
+      display.classList.add('show');
+      
+      setTimeout(() => {
+        display.classList.remove('show');
+        announcer.textContent = '';
+      }, 5000);
+    }
+
+    function showNotification() {
+      announceMessage('Notification: Action completed successfully!');
+    }
+
+    // Initialize carousel
+    updateCarousel();
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('modal');
+        if (modal.style.display === 'block') {
+          closeModal();
+        }
+      }
+    });
+
+    // Announce page load for screen readers
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        announceMessage('Web Accessibility Examples page loaded. Navigate using Tab key or screen reader commands.');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

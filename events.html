@@ -3,6 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <title>JS Event Listener Example</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
+      color: #333;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    h1 {
+      color: #1e3a8a;
+      margin-bottom: 2rem;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      background: #00bfff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #1e3a8a;
+      transform: translateY(-2px);
+    }
+  </style>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const button = document.getElementById('eventButton');
@@ -13,7 +50,9 @@
   </script>
 </head>
 <body>
-  <h1>Event Listener Example</h1>
-  <button id="eventButton">Click me</button>
+  <div class="container">
+    <h1>Event Listener Example</h1>
+    <button id="eventButton">Click me</button>
+  </div>
 </body>
 </html>

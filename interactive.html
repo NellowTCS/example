@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Components Example</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .component-section {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid #e9ecef;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #aaa;
+    }
+
+    .modal-close:hover {
+      color: #e74c3c;
+    }
+
+    /* Tabs Styles */
+    .tabs {
+      border-bottom: 2px solid #3498db;
+      margin-bottom: 20px;
+    }
+
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      background: #ecf0f1;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px 5px 0 0;
+      transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+      background: #3498db;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background: white;
+      border-radius: 0 5px 5px 5px;
+      min-height: 100px;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: slideInContent 0.3s ease;
+    }
+
+    @keyframes slideInContent {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Accordion Styles */
+    .accordion {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid #ddd;
+    }
+
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-header {
+      background: #f8f9fa;
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    .accordion-header:hover {
+      background: #e9ecef;
+    }
+
+    .accordion-header.active {
+      background: #3498db;
+      color: white;
+    }
+
+    .accordion-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-header.active .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      background: white;
+      transition: max-height 0.3s ease;
+    }
+
+    .accordion-content.active {
+      max-height: 300px;
+    }
+
+    .accordion-content-inner {
+      padding: 20px;
+    }
+
+    /* Tooltip Styles */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+
+    .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 14px;
+    }
+
+    .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      border-radius: 5px;
+      z-index: 1;
+      top: 100%;
+      left: 0;
+      margin-top: 5px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.3s;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown.show .dropdown-content {
+      display: block;
+      animation: dropdownFadeIn 0.3s ease;
+    }
+
+    @keyframes dropdownFadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toast Styles */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2000;
+    }
+
+    .toast {
+      background: #333;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      min-width: 250px;
+      position: relative;
+      animation: toastSlideIn 0.3s ease;
+    }
+
+    .toast.success {
+      background: #27ae60;
+    }
+
+    .toast.error {
+      background: #e74c3c;
+    }
+
+    .toast.warning {
+      background: #f39c12;
+    }
+
+    @keyframes toastSlideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-close {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Card Flip */
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 200px;
+      perspective: 1000px;
+      margin: 20px 0;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .flip-card-front {
+      background: linear-gradient(45deg, #3498db, #2ecc71);
+      color: white;
+    }
+
+    .flip-card-back {
+      background: linear-gradient(45deg, #e74c3c, #f39c12);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    /* Slider */
+    .slider-container {
+      margin: 20px 0;
+    }
+
+    .slider {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: #ddd;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3498db;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3498db;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: #27ae60;
+    }
+
+    .btn-success:hover {
+      background: #229954;
+    }
+
+    .btn-warning {
+      background: #f39c12;
+    }
+
+    .btn-warning:hover {
+      background: #e67e22;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      padding: 3px;
+      margin: 20px 0;
+    }
+
+    .progress-bar {
+      height: 20px;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .step {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .step.active {
+      background: #3498db;
+    }
+
+    .step.completed {
+      background: #27ae60;
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #ddd;
+      margin: 0 10px;
+    }
+
+    .step-line.completed {
+      background: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Interactive Components Examples</h1>
+    <p style="text-align: center;">A comprehensive collection of modern web UI components with JavaScript interactions</p>
+
+    <div class="component-grid">
+      <!-- Modal Component -->
+      <div class="component-section">
+        <h2>Modal Dialog</h2>
+        <p>Click to open a modal with focus management and keyboard navigation.</p>
+        <button class="btn" onclick="openModal('sampleModal')">Open Modal</button>
+        
+        <!-- Sample Modal -->
+        <div id="sampleModal" class="modal">
+          <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('sampleModal')">&times;</button>
+            <h3>Sample Modal</h3>
+            <p>This is a modal dialog with proper focus management.</p>
+            <p>You can navigate using Tab/Shift+Tab and close with Escape.</p>
+            <button class="btn" onclick="closeModal('sampleModal')">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Component -->
+      <div class="component-section">
+        <h2>Tab Navigation</h2>
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="tab-button active" onclick="openTab(event, 'tab1', 'tabs1')">Tab 1</button>
+            <button class="tab-button" onclick="openTab(event, 'tab2', 'tabs1')">Tab 2</button>
+            <button class="tab-button" onclick="openTab(event, 'tab3', 'tabs1')">Tab 3</button>
+          </div>
+          
+          <div id="tab1" class="tab-content active" data-group="tabs1">
+            <h4>First Tab Content</h4>
+            <p>This is the content for the first tab. You can include any HTML content here.</p>
+          </div>
+          <div id="tab2" class="tab-content" data-group="tabs1">
+            <h4>Second Tab Content</h4>
+            <p>Different content for the second tab with more information.</p>
+          </div>
+          <div id="tab3" class="tab-content" data-group="tabs1">
+            <h4>Third Tab Content</h4>
+            <p>Final tab with additional details and examples.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion Component -->
+      <div class="component-section">
+        <h2>Accordion</h2>
+        <div class="accordion">
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>What is JavaScript?</span>
+              <span class="accordion-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-content-inner">
+                <p>JavaScript is a programming language that enables interactive web pages and is an essential part of web applications.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>How do CSS animations work?</span>
+              <span class="accordion-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-content-inner">
+                <p>CSS animations allow elements to gradually change from one style to another using keyframes and transition properties.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>What is responsive design?</span>
+              <span class="accordion-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-content-inner">
+                <p>Responsive design ensures that web pages look good on all devices by using flexible layouts, images, and CSS media queries.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tooltip Component -->
+      <div class="component-section">
+        <h2>Tooltips</h2>
+        <p>Hover over the elements below to see tooltips:</p>
+        <p>
+          <span class="tooltip">Hover me!
+            <span class="tooltip-text">This is a helpful tooltip with additional information.</span>
+          </span>
+        </p>
+        <p>
+          <span class="tooltip">Another tooltip
+            <span class="tooltip-text">Tooltips provide context and help for users.</span>
+          </span>
+        </p>
+      </div>
+
+      <!-- Dropdown Component -->
+      <div class="component-section">
+        <h2>Dropdown Menu</h2>
+        <div class="dropdown">
+          <button class="dropdown-button" onclick="toggleDropdown(this)">
+            Select Option ▼
+          </button>
+          <div class="dropdown-content">
+            <a href="#" onclick="selectOption(this, 'Option 1')">Option 1</a>
+            <a href="#" onclick="selectOption(this, 'Option 2')">Option 2</a>
+            <a href="#" onclick="selectOption(this, 'Option 3')">Option 3</a>
+            <a href="#" onclick="selectOption(this, 'Option 4')">Option 4</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notifications -->
+      <div class="component-section">
+        <h2>Toast Notifications</h2>
+        <p>Click buttons to trigger different types of notifications:</p>
+        <button class="btn btn-success" onclick="showToast('success', 'Success! Operation completed.')">Success Toast</button>
+        <button class="btn btn-warning" onclick="showToast('warning', 'Warning! Please check your input.')">Warning Toast</button>
+        <button class="btn btn-danger" onclick="showToast('error', 'Error! Something went wrong.')">Error Toast</button>
+      </div>
+    </div>
+
+    <!-- Full Width Components -->
+    <div class="component-section" style="margin: 2rem 0;">
+      <h2>Flip Card</h2>
+      <p>Click the card below to see the flip animation:</p>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <div>
+              <h3>Front Side</h3>
+              <p>Click to flip!</p>
+            </div>
+          </div>
+          <div class="flip-card-back">
+            <div>
+              <h3>Back Side</h3>
+              <p>Click again to flip back!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="component-section" style="margin: 2rem 0;">
+      <h2>Interactive Slider & Progress</h2>
+      <div class="slider-container">
+        <label for="valueSlider">Value: <span id="sliderValue">50</span></label>
+        <input type="range" min="0" max="100" value="50" class="slider" id="valueSlider" oninput="updateSlider(this)">
+      </div>
+      
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar" style="width: 50%;">50%</div>
+      </div>
+      
+      <button class="btn" onclick="animateProgress()">Animate Progress</button>
+    </div>
+
+    <div class="component-section" style="margin: 2rem 0;">
+      <h2>Stepper Component</h2>
+      <div class="stepper">
+        <div class="step completed" id="step1">1</div>
+        <div class="step-line completed"></div>
+        <div class="step completed" id="step2">2</div>
+        <div class="step-line completed"></div>
+        <div class="step active" id="step3">3</div>
+        <div class="step-line"></div>
+        <div class="step" id="step4">4</div>
+        <div class="step-line"></div>
+        <div class="step" id="step5">5</div>
+      </div>
+      
+      <button class="btn" onclick="prevStep()">Previous Step</button>
+      <button class="btn" onclick="nextStep()">Next Step</button>
+      <button class="btn btn-warning" onclick="resetStepper()">Reset</button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    let currentStep = 3;
+    const totalSteps = 5;
+
+    // Modal Functions
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.style.display = 'block';
+      
+      // Focus the close button
+      setTimeout(() => {
+        modal.querySelector('.modal-close').focus();
+      }, 100);
+      
+      // Add escape key listener
+      document.addEventListener('keydown', handleModalEscape);
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.style.display = 'none';
+      document.removeEventListener('keydown', handleModalEscape);
+    }
+
+    function handleModalEscape(event) {
+      if (event.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+          if (modal.style.display === 'block') {
+            modal.style.display = 'none';
+          }
+        });
+        document.removeEventListener('keydown', handleModalEscape);
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
+
+    // Tab Functions
+    function openTab(evt, tabName, groupName) {
+      const tabContents = document.querySelectorAll(`[data-group="${groupName}"]`);
+      const tabButtons = evt.target.parentNode.querySelectorAll('.tab-button');
+      
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      tabButtons.forEach(button => {
+        button.classList.remove('active');
+      });
+      
+      document.getElementById(tabName).classList.add('active');
+      evt.target.classList.add('active');
+    }
+
+    // Accordion Functions
+    function toggleAccordion(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.accordion-icon');
+      
+      // Close all other accordion items
+      const allHeaders = document.querySelectorAll('.accordion-header');
+      allHeaders.forEach(h => {
+        if (h !== header) {
+          h.classList.remove('active');
+          h.nextElementSibling.classList.remove('active');
+        }
+      });
+      
+      // Toggle current accordion item
+      header.classList.toggle('active');
+      content.classList.toggle('active');
+    }
+
+    // Dropdown Functions
+    function toggleDropdown(button) {
+      const dropdown = button.parentNode;
+      dropdown.classList.toggle('show');
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function closeDropdown(event) {
+        if (!dropdown.contains(event.target)) {
+          dropdown.classList.remove('show');
+          document.removeEventListener('click', closeDropdown);
+        }
+      });
+    }
+
+    function selectOption(option, value) {
+      const dropdown = option.closest('.dropdown');
+      const button = dropdown.querySelector('.dropdown-button');
+      button.innerHTML = value + ' ▼';
+      dropdown.classList.remove('show');
+      showToast('success', `Selected: ${value}`);
+    }
+
+    // Toast Functions
+    function showToast(type, message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        ${message}
+        <button class="toast-close" onclick="closeToast(this)">×</button>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Auto-close after 5 seconds
+      setTimeout(() => {
+        if (toast.parentNode) {
+          closeToast(toast.querySelector('.toast-close'));
+        }
+      }, 5000);
+    }
+
+    function closeToast(closeButton) {
+      const toast = closeButton.parentNode;
+      toast.style.animation = 'toastSlideIn 0.3s ease reverse';
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 300);
+    }
+
+    // Flip Card Function
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+    }
+
+    // Slider Functions
+    function updateSlider(slider) {
+      const value = slider.value;
+      document.getElementById('sliderValue').textContent = value;
+      
+      const progressBar = document.getElementById('progressBar');
+      progressBar.style.width = value + '%';
+      progressBar.textContent = value + '%';
+    }
+
+    function animateProgress() {
+      let progress = 0;
+      const progressBar = document.getElementById('progressBar');
+      const slider = document.getElementById('valueSlider');
+      
+      const interval = setInterval(() => {
+        progress += 2;
+        if (progress > 100) {
+          progress = 0;
+        }
+        
+        progressBar.style.width = progress + '%';
+        progressBar.textContent = progress + '%';
+        slider.value = progress;
+        document.getElementById('sliderValue').textContent = progress;
+        
+        if (progress === 100) {
+          clearInterval(interval);
+          showToast('success', 'Animation completed!');
+        }
+      }, 50);
+    }
+
+    // Stepper Functions
+    function updateStepper() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const step = document.getElementById(`step${i}`);
+        const line = step.nextElementSibling;
+        
+        if (i < currentStep) {
+          step.className = 'step completed';
+          if (line && line.classList.contains('step-line')) {
+            line.classList.add('completed');
+          }
+        } else if (i === currentStep) {
+          step.className = 'step active';
+          if (line && line.classList.contains('step-line')) {
+            line.classList.remove('completed');
+          }
+        } else {
+          step.className = 'step';
+          if (line && line.classList.contains('step-line')) {
+            line.classList.remove('completed');
+          }
+        }
+      }
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateStepper();
+        showToast('success', `Advanced to step ${currentStep}`);
+      } else {
+        showToast('warning', 'Already at the last step!');
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepper();
+        showToast('success', `Moved back to step ${currentStep}`);
+      } else {
+        showToast('warning', 'Already at the first step!');
+      }
+    }
+
+    function resetStepper() {
+      currentStep = 1;
+      updateStepper();
+      showToast('success', 'Stepper reset to beginning');
+    }
+
+    // Initialize components
+    document.addEventListener('DOMContentLoaded', function() {
+      updateStepper();
+      showToast('success', 'Interactive Components loaded successfully!');
+    });
+  </script>
+</body>
+</html>

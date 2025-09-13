@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Animations & Effects Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #00bfff, #1e3a8a);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff; }
+      to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; }
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .demo-box {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .demo-box:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Animation Examples */
+    .bounce-ball {
+      width: 50px;
+      height: 50px;
+      background: #ff6b6b;
+      border-radius: 50%;
+      margin: 20px auto;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+
+    .rotate-square {
+      width: 60px;
+      height: 60px;
+      background: #4ecdc4;
+      margin: 20px auto;
+      animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .pulse-circle {
+      width: 60px;
+      height: 60px;
+      background: #45b7d1;
+      border-radius: 50%;
+      margin: 20px auto;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .slide-text {
+      animation: slideIn 1s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Interactive Elements */
+    .hover-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+
+    .hover-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05) rotate(1deg);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      margin: 20px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ecdc4, #44a08d);
+      border-radius: 10px;
+      width: 0%;
+      animation: fillProgress 3s ease-in-out infinite;
+    }
+
+    @keyframes fillProgress {
+      0% { width: 0%; }
+      50% { width: 100%; }
+      100% { width: 0%; }
+    }
+
+    /* Button Animations */
+    .animated-btn {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin: 10px;
+    }
+
+    .animated-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .animated-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .shake-btn {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* Floating Animation */
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .control-panel {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Gradient Animation */
+    .gradient-bg {
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientShift 4s ease infinite;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CSS Animations & Effects</h1>
+    <p class="slide-text">Comprehensive examples of CSS animations and transitions</p>
+  </div>
+
+  <div class="container">
+    <h2>Basic Animations</h2>
+    <div class="demo-grid">
+      <div class="demo-box">
+        <h3>Bouncing Ball</h3>
+        <div class="bounce-ball"></div>
+        <p>Infinite bounce animation</p>
+      </div>
+      
+      <div class="demo-box">
+        <h3>Rotating Square</h3>
+        <div class="rotate-square"></div>
+        <p>Continuous rotation</p>
+      </div>
+      
+      <div class="demo-box">
+        <h3>Pulsing Circle</h3>
+        <div class="pulse-circle"></div>
+        <p>Scale and opacity animation</p>
+      </div>
+      
+      <div class="demo-box floating">
+        <h3>Floating Box</h3>
+        <div class="loading-spinner"></div>
+        <p>This entire box floats up and down</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Interactive Elements</h2>
+    
+    <div class="hover-card">
+      <h3>Hover Card</h3>
+      <p>Hover over this card to see scaling and rotation effects</p>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <p style="text-align: center;">Animated Progress Bar</p>
+    
+    <div class="control-panel">
+      <button class="animated-btn" onclick="triggerShake(this)">Click to Shake</button>
+      <button class="control-btn" onclick="toggleAnimation('bounce-ball')">Toggle Bounce</button>
+      <button class="control-btn" onclick="toggleAnimation('rotate-square')">Toggle Rotation</button>
+      <button class="control-btn" onclick="resetAnimations()">Reset All</button>
+    </div>
+  </div>
+
+  <div class="container gradient-bg">
+    <h2>Gradient Background Animation</h2>
+    <p>This background continuously shifts between different gradient colors.</p>
+    <p>Perfect for creating dynamic, eye-catching sections on your website.</p>
+  </div>
+
+  <div class="container">
+    <h2>Animation Performance Tips</h2>
+    <ul>
+      <li>Use <code>transform</code> and <code>opacity</code> for smooth animations</li>
+      <li>Avoid animating layout properties like <code>width</code> and <code>height</code></li>
+      <li>Use <code>will-change</code> property for complex animations</li>
+      <li>Consider <code>reduce-motion</code> media query for accessibility</li>
+      <li>Use <code>animation-fill-mode</code> to control element state after animation</li>
+    </ul>
+  </div>
+
+  <script>
+    function triggerShake(button) {
+      button.classList.add('shake-btn');
+      setTimeout(() => {
+        button.classList.remove('shake-btn');
+      }, 500);
+    }
+
+    function toggleAnimation(className) {
+      const elements = document.getElementsByClassName(className);
+      for (let element of elements) {
+        if (element.style.animationPlayState === 'paused') {
+          element.style.animationPlayState = 'running';
+        } else {
+          element.style.animationPlayState = 'paused';
+        }
+      }
+    }
+
+    function resetAnimations() {
+      const animatedElements = [
+        ...document.getElementsByClassName('bounce-ball'),
+        ...document.getElementsByClassName('rotate-square'),
+        ...document.getElementsByClassName('pulse-circle')
+      ];
+      
+      animatedElements.forEach(element => {
+        element.style.animationPlayState = 'running';
+      });
+    }
+
+    // Add some dynamic behavior
+    document.addEventListener('DOMContentLoaded', () => {
+      // Create floating particles effect
+      const container = document.body;
+      
+      for (let i = 0; i < 10; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: fixed;
+          width: 4px;
+          height: 4px;
+          background: rgba(255, 255, 255, 0.5);
+          border-radius: 50%;
+          pointer-events: none;
+          animation: float ${3 + Math.random() * 4}s linear infinite;
+          left: ${Math.random() * 100}vw;
+          animation-delay: ${Math.random() * 4}s;
+          z-index: -1;
+        `;
+        
+        container.appendChild(particle);
+      }
+      
+      // Add floating animation keyframes
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes float {
+          0% { transform: translateY(100vh) scale(0); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+</body>
+</html>
