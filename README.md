@@ -1,5 +1,8 @@
 # Example Webpage Collection
 
+> [!IMPORTANT]  
+> This was improved by AI (as you can probably tell), as I was testing GitHub Copilot Agent (scary powerful btw). Check https://github.com/NellowTCS/example/pull/1 for more details on what the AI improved.
+
 A comprehensive collection of HTML, CSS, and JavaScript examples for testing web functionality and demonstrating modern web development techniques.
 
 ## Available Examples
