@@ -2,7 +2,7 @@
 
 A comprehensive collection of HTML, CSS, and JavaScript examples for testing web functionality and demonstrating modern web development techniques.
 
-## 📋 Available Examples
+## Available Examples
 
 ### Basic Web Technologies
 - **[JavaScript Test](javascript.html)** - Basic JavaScript functionality and DOM manipulation
@@ -30,7 +30,7 @@ A comprehensive collection of HTML, CSS, and JavaScript examples for testing web
 - **[PWA Dynamic Test](PWA/index.html)** - Cross-browser dynamic theme support
 - **[PWA with CSS Variables](PWA2/index.html)** - Auto theme detection and CSS custom properties
 
-## 🚀 Features Demonstrated
+## Features Demonstrated
 
 - **Responsive Design**: Mobile-first approach with CSS Grid and Flexbox
 - **Accessibility**: WCAG 2.1 compliance, ARIA attributes, keyboard navigation
@@ -39,11 +39,11 @@ A comprehensive collection of HTML, CSS, and JavaScript examples for testing web
 - **Interactive UI**: Modals, tabs, accordions, tooltips, and form validation
 - **Progressive Enhancement**: Works across all modern browsers with graceful degradation
 
-## 🛠️ Usage
+## Usage
 
 Simply open `index.html` in a web browser to access the main navigation page, or visit any individual example directly. All examples are self-contained and require no additional setup or dependencies.
 
-## 📱 Browser Compatibility
+## Browser Compatibility
 
 These examples are designed to work across modern browsers including:
 - Chrome/Chromium (latest)
@@ -53,7 +53,7 @@ These examples are designed to work across modern browsers including:
 
 Some HTML5 API examples may require HTTPS in production environments and appropriate user permissions.
 
-## 🎯 Purpose
+## Purpose
 
 This collection serves as:
 - Testing environment for web functionality
